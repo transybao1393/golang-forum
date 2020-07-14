@@ -3,9 +3,7 @@ services:
   web:
     build: .
     ports:
-      - "4567:4567"
       - "9000:9000"
-    # command: ["/wait-for-it.sh", "redis:6379", "--", "./nodebb", "start"]
     command: bash -c "
       /wait-for-it.sh redis:6379 -- ./nodebb upgrade 
       && ./nodebb setup 

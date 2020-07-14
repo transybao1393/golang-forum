@@ -5,7 +5,7 @@ RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
 ARG NODE_ENV
-ENV NODE_ENV=$NODE_ENV redis:host=redis
+ENV NODE_ENV=$NODE_ENV redis:host=redis port=9000
 COPY install/package.json /usr/src/app/package.json
 RUN npm i npm@latest -g
 RUN npm install && npm cache clean --force
@@ -22,4 +22,4 @@ ENV NODE_ENV=production \
 # CMD ./nodebb start
 
 # the default port for NodeBB is exposed outside the container
-EXPOSE 4567
+# EXPOSE 4567
