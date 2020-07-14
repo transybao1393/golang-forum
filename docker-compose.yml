@@ -2,8 +2,9 @@ version: '3'
 services:
   web:
     build: .
-    ports:
-      - "9000:9000"
+    # ports:
+      # - "4567:4567"
+      # - "9000:9000"
     command: bash -c "
       /wait-for-it.sh redis:6379 -- ./nodebb upgrade 
       && ./nodebb setup 
@@ -11,3 +12,19 @@ services:
   redis:
     image: "redis:alpine"
     restart: on-failure
+  nginx:
+    container_name: forum_nginx_reverse_proxy
+    build:
+      context: .
+      dockerfile: nginx.dockerfile
+    command: ["/wait-for-it.sh", "web:9000", "--", "nginx", "-g", "daemon off;"]
+    volumes:
+      - ./nginx-conf/nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - 80:80
+    depends_on:
+      - web
+    restart: on-failure
+    
+volumes:
+  nginx-conf:
